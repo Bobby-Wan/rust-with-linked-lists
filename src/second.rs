@@ -13,8 +13,41 @@ type Link<T> = Option<Box<Node<T>>>;
 
 pub struct IntoIter<T>(List<T>);
 
+impl<'a, T> Iterator for IntoIter<T> {
+    type Item = T;
+    fn next(&mut self) -> Option<Self::Item> {
+        self.0.pop()
+    }
+}
+
 pub struct Iter<'a, T> {
     next: Option<&'a Node<T>>
+}
+
+impl<'a, T> Iterator for Iter<'a, T> {
+    type Item = &'a T;
+    
+    fn next(&mut self) -> Option<Self::Item> {
+        self.next.map(|node| {
+            self.next = node.next.as_deref();
+            &node.elem
+        })
+    }
+}
+
+pub struct IterMut<'a, T> {
+    next: Option<&'a mut Node<T>>
+}
+
+impl<'a, T> Iterator for IterMut<'a, T> {
+    type Item = &'a mut T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.next.map(|node| {
+            self.next = node.next.as_deref();
+            &node.elem
+        })
+    }
 }
 
 impl<T> List<T> {
@@ -57,26 +90,11 @@ impl<T> List<T> {
     pub fn iter<'a>(&'a self) -> Iter<'a, T> {
         Iter { next: self.head.as_deref() }
     }
-}
 
-impl<'a, T> Iterator for IntoIter<T> {
-    type Item = T;
-    fn next(&mut self) -> Option<Self::Item> {
-        self.0.pop()
+    pub fn iter_mut<'a>(&'a self) -> IterMut<'a, T> {
+        Iter { next: self.head.as_deref() }
     }
 }
-
-impl<'a, T> Iterator for Iter<'a, T> {
-    type Item = &'a T;
-    
-    fn next(&mut self) -> Option<Self::Item> {
-        self.next.map(|node| {
-            self.next = node.next.as_deref();
-            &node.elem
-        })
-    }
-}
-
 
 impl<T> Drop for List<T> {
     fn drop(&mut self) {
