@@ -24,7 +24,10 @@ pub struct IterMut<'a, T> {
 
 impl<T> List<T> {
     pub fn new() -> Self {
-        List{ head: ptr::null_mut(), tail: ptr::null_mut() }
+        List {
+            head: ptr::null_mut(),
+            tail: ptr::null_mut(),
+        }
     }
 
     pub fn push(&mut self, elem: T) {
@@ -58,7 +61,6 @@ impl<T> List<T> {
 
                 Some(head.elem)
             }
-
         }
     }
 
@@ -68,32 +70,32 @@ impl<T> List<T> {
 
     pub fn iter(&self) -> Iter<'_, T> {
         unsafe {
-            Iter { next: self.head.as_ref() }
+            Iter {
+                next: self.head.as_ref(),
+            }
         }
     }
 
     pub fn iter_mut(&mut self) -> IterMut<'_, T> {
         unsafe {
-            IterMut { next: self.head.as_mut() }
+            IterMut {
+                next: self.head.as_mut(),
+            }
         }
     }
 
     pub fn peek(&self) -> Option<&T> {
-        unsafe {
-            self.head.as_ref().map(|node| &node.elem)
-        }
+        unsafe { self.head.as_ref().map(|node| &node.elem) }
     }
 
     pub fn peek_mut(&mut self) -> Option<&mut T> {
-        unsafe {
-            self.head.as_mut().map(|node| &mut node.elem)
-        }
+        unsafe { self.head.as_mut().map(|node| &mut node.elem) }
     }
 }
 
 impl<T> Drop for List<T> {
     fn drop(&mut self) {
-        while let Some(_) = self.pop() { }
+        while let Some(_) = self.pop() {}
     }
 }
 
@@ -170,10 +172,12 @@ mod test {
         assert_eq!(list.pop(), None);
     }
 
-     #[test]
+    #[test]
     fn into_iter() {
         let mut list = List::new();
-        list.push(1); list.push(2); list.push(3);
+        list.push(1);
+        list.push(2);
+        list.push(3);
 
         let mut iter = list.into_iter();
         assert_eq!(iter.next(), Some(1));
@@ -185,7 +189,9 @@ mod test {
     #[test]
     fn iter() {
         let mut list = List::new();
-        list.push(1); list.push(2); list.push(3);
+        list.push(1);
+        list.push(2);
+        list.push(3);
 
         let mut iter = list.iter();
         assert_eq!(iter.next(), Some(&1));
@@ -197,7 +203,9 @@ mod test {
     #[test]
     fn iter_mut() {
         let mut list = List::new();
-        list.push(1); list.push(2); list.push(3);
+        list.push(1);
+        list.push(2);
+        list.push(3);
 
         let mut iter = list.iter_mut();
         assert_eq!(iter.next(), Some(&mut 1));
