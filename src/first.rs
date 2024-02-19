@@ -1,19 +1,18 @@
 #[allow(dead_code)]
-
 use std::mem;
 
 pub struct List {
-    head: Link
+    head: Link,
 }
 
 struct Node {
     elem: i32,
-    next: Link
+    next: Link,
 }
 
 enum Link {
     Empty,
-    More(Box<Node>)
+    More(Box<Node>),
 }
 
 impl List {
@@ -23,10 +22,7 @@ impl List {
 
     pub fn push(&mut self, elem: i32) {
         let head = mem::replace(&mut self.head, Link::Empty);
-        let new_node = Box::new(Node {
-            elem,
-            next: head
-        });
+        let new_node = Box::new(Node { elem, next: head });
         self.head = Link::More(new_node);
     }
 

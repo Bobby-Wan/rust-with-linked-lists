@@ -21,25 +21,31 @@ impl<T> List<T> {
     }
 
     pub fn prepend(&self, elem: T) -> List<T> {
-        List { head: Some(Rc::new(Node {
-            elem,
-            next: self.head.clone(),
-        }))}
+        List {
+            head: Some(Rc::new(Node {
+                elem,
+                next: self.head.clone(),
+            })),
+        }
     }
 
     pub fn tail(&self) -> List<T> {
         //TODO: figure out as_ref call
         //TODO: had map(...), replaced with and_then, because
         //map returns Option<X> and we want X? Figure it out.
-        List { head: self.head.as_ref().and_then(|node| node.next.clone()) }
+        List {
+            head: self.head.as_ref().and_then(|node| node.next.clone()),
+        }
     }
 
     pub fn head(&self) -> Option<&T> {
         self.head.as_ref().map(|node| &node.elem)
     }
-    
+
     pub fn iter(&self) -> Iter<'_, T> {
-        Iter { next: self.head.as_deref() }
+        Iter {
+            next: self.head.as_deref(),
+        }
     }
 }
 
@@ -69,7 +75,7 @@ impl<T> Drop for List<T> {
 
 #[allow(unused)]
 fn test() {
-    let b: Box<List<i32>> = Box::new(List{ head: None });
+    let b: Box<List<i32>> = Box::new(List { head: None });
     let ref_b = &b;
     let opt_b = Some(b);
     let reffed_b = opt_b.as_ref();
@@ -100,7 +106,6 @@ mod test {
         // Make sure empty tail works
         let list = list.tail();
         assert_eq!(list.head(), None);
-
     }
 
     #[test]
